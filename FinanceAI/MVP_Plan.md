@@ -65,7 +65,11 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   Finalize Backend framework choice.
     *   AWS infrastructure setup (Compute, RDS/Postgres, S3, Bedrock/Textract, SQS).
     *   CI/CD pipeline basics.
-    *   Database schema & User authentication.
+    *   **Database schema design & initial implementation:** 
+        *   Identify core entities (Users, Organizations, Invoices, POs, Approval Status, Audit Logs).
+        *   Define relationships and initial field requirements for MVP features.
+        *   Implement foundational tables in PostgreSQL (AWS RDS).
+    *   User authentication setup.
     *   Basic UI shell (Next.js) & PDF upload component.
     *   Integrate AWS Textract (OCR) & LLM (AWS Bedrock/Claude or OpenAI API) for initial data extraction.
     *   Basic dashboard UI setup.
