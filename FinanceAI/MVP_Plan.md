@@ -15,11 +15,11 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   Web-based interface for manual PDF invoice uploads.
     *   Mechanism to receive invoices via a dedicated email address.
 *   **Data Extraction (OCR + LLM):**
-    *   Integration with **Azure Form Recognizer** for OCR.
-    *   Integration with **Azure OpenAI Service (ChatGPT models)** for key field extraction: Vendor Name, Invoice Date, Due Date, Invoice Amount, PO Number.
+    *   Integration with **AWS Textract** for OCR.
+    *   Integration with **AWS Bedrock (Anthropic Claude recommended)** for key field extraction: Vendor Name, Invoice Date, Due Date, Invoice Amount, PO Number.
 *   **Basic Validation:**
     *   Duplicate invoice detection.
-    *   PO matching (Requires mechanism for PO data availability - e.g., simple upload/list).
+    *   PO matching (Includes MVP implementation of a simple mechanism for PO data upload/management).
     *   Flagging interface for identified issues.
 *   **Approval Workflow:**
     *   Simple, configurable approval routing logic.
@@ -35,37 +35,39 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
         *   Dashboard for invoice status tracking.
         *   Clear invoice detail view.
         *   User-friendly document uploader.
+*   **Basic Error Handling:**
+    *   Mechanism to flag processing errors (e.g., OCR/LLM failures, unparseable emails) for user review within the dashboard.
 
 ## 3. Technology Stack
 
-*   **Frontend:** React / Vue.js (To be finalized based on preference/efficiency).
+*   **Frontend:** Next.js (React-based).
 *   **Backend:** Python (Django/Flask recommended) / Node.js.
-*   **Database:** PostgreSQL.
+*   **Database:** PostgreSQL (potentially using AWS RDS).
 *   **AI / OCR:**
-    *   **Primary:** Microsoft Azure Cloud Platform
-        *   OCR: **Azure Form Recognizer**
-        *   LLM: **Azure OpenAI Service (ChatGPT)**
-    *   *Alternatives:* AWS/Claude, Google Cloud/Gemini (if primary faces unexpected roadblocks).
-*   **Deployment:** Docker, Azure App Service / Azure Functions / AKS (based on final architecture).
-*   **Storage:** Azure Blob Storage.
+    *   **Primary:** Amazon Web Services (AWS)
+        *   OCR: **AWS Textract**
+        *   LLM: **AWS Bedrock (Anthropic Claude recommended)**
+    *   *Alternatives:* Direct OpenAI API integration (callable from AWS), Google Cloud/Gemini.
+*   **Deployment:** Docker, AWS EC2 / Lambda / ECS / EKS / App Runner (based on final architecture).
+*   **Storage:** AWS S3.
 
 ## 4. High-Level Architecture
 
-*   **Frontend:** SPA communicating via APIs.
-*   **Backend:** RESTful API on Azure.
-*   **Processing:** Asynchronous task queue (e.g., Azure Queue Storage + Azure Functions, or Celery with Redis on VM/AKS) for OCR and LLM processing to ensure scalability.
-*   **Storage:** Secure Azure Blob Storage for invoice documents.
+*   **Frontend:** SPA built with Next.js communicating via APIs.
+*   **Backend:** RESTful API on AWS.
+*   **Processing:** Asynchronous task queue (e.g., AWS SQS + AWS Lambda, or Celery with Redis on EC2/ECS) for OCR and LLM processing to ensure scalability.
+*   **Storage:** Secure AWS S3 for invoice documents.
 *   *Design Consideration:* Modular design to facilitate future agent additions (e.g., exception handling) and integrations (HR, fundraising).
 
 ## 5. Development Timeline (3 Months)
 
 *   **Month 1: Foundation & Core Extraction**
-    *   Finalize Frontend/Backend framework choice.
-    *   Azure infrastructure setup (App Service/Functions, DB, Storage, OpenAI).
+    *   Finalize Backend framework choice.
+    *   AWS infrastructure setup (Compute, RDS/Postgres, S3, Bedrock/Textract, SQS).
     *   CI/CD pipeline basics.
     *   Database schema & User authentication.
-    *   Basic UI shell & PDF upload component.
-    *   Integrate Azure Form Recognizer (OCR) & Azure OpenAI (LLM) for initial data extraction.
+    *   Basic UI shell (Next.js) & PDF upload component.
+    *   Integrate AWS Textract (OCR) & AWS Bedrock/Claude (LLM) for initial data extraction.
     *   Basic dashboard UI setup.
 *   **Month 2: Workflow & Validation**
     *   Refine data extraction accuracy.
@@ -95,5 +97,6 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 8. Key Assumptions
 
 *   Availability of clear API documentation and test environments for target accounting systems.
-*   A mechanism for providing PO data (e.g., CSV upload) will be defined for MVP matching.
-*   Approval logic requirements are relatively simple for the MVP. 
+*   The implemented simple PO data management mechanism meets MVP needs.
+*   Approval logic requirements are relatively simple for the MVP.
+*   Basic error flagging is sufficient for initial MVP operational needs. 
