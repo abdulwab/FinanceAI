@@ -41,7 +41,9 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 3. Technology Stack
 
 *   **Frontend:** Next.js (React-based).
-*   **Backend:** Python with FastAPI (preferred for its high performance, automatic API documentation, and modern async support).
+*   **Backend Options:**
+    *   **Option 1:** Python with FastAPI (preferred for its high performance, automatic API documentation, and modern async support).
+    *   **Option 2:** Node.js with Next.js API Routes (leveraging Next.js's full-stack capabilities for simplified development and deployment).
 *   **Database:** PostgreSQL on AWS RDS.
 *   **AI / OCR:**
     *   **Primary:** Amazon Web Services (AWS)
@@ -63,11 +65,14 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   Secure authentication flow with JWT tokens.
 
 *   **Backend Layer:**
-    *   FastAPI application on AWS App Runner with automatic OpenAPI documentation.
-    *   Role-based access control (Admin, Uploader, Approver) using FastAPI dependencies.
+    *   **Option 1:** FastAPI application on AWS App Runner with automatic OpenAPI documentation.
+        *   Role-based access control (Admin, Uploader, Approver) using FastAPI dependencies.
+        *   SQLAlchemy ORM for database interactions.
+    *   **Option 2:** Next.js API Routes with Node.js backend.
+        *   Role-based access control using middleware.
+        *   Prisma ORM for database interactions.
     *   API endpoints for invoice management, user management, and system configuration.
     *   Integration with external services (OCR, LLM, accounting systems).
-    *   SQLAlchemy ORM for database interactions.
 
 *   **Processing Layer:**
     *   Asynchronous task queue using AWS SQS.
@@ -105,14 +110,14 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 5. Development Timeline (3 Months)
 
 *   **Month 1: Foundation & Core Extraction**
-    *   Finalize Backend framework choice (FastAPI).
+    *   Finalize Backend framework choice (FastAPI or Node.js with Next.js API Routes).
     *   AWS infrastructure setup (App Runner, RDS/PostgreSQL, S3, Bedrock/Textract, SQS, Lambda).
     *   CI/CD pipeline basics.
     *   **Database schema design & initial implementation:** 
         *   Identify core entities (Users, Organizations, Invoices, POs, Approval Status, Audit Logs).
         *   Define relationships and initial field requirements for MVP features.
-        *   Implement foundational tables in PostgreSQL (AWS RDS) with SQLAlchemy models.
-    *   User authentication setup with FastAPI security utilities.
+        *   Implement foundational tables in PostgreSQL (AWS RDS) with SQLAlchemy (FastAPI) or Prisma (Node.js) models.
+    *   User authentication setup with appropriate security utilities.
     *   Basic UI shell (Next.js) & PDF upload component.
     *   Integrate AWS Textract (OCR) & LLM (AWS Bedrock/Claude or OpenAI API) for initial data extraction.
     *   Basic dashboard UI setup.
