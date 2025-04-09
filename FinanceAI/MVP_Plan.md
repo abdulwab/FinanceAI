@@ -9,14 +9,14 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 *   Validate the core value proposition with initial non-profit clients (handling ~100-200 invoices/month).
 *   Establish a scalable architecture foundation for future expansion (HR, fundraising, advanced accounting, exception handling).
 
-## 2. MVP Scope (Phase 1 Features - 3 Month Delivery)
+## 2. MVP Scope
 
 *   **Invoice Intake:**
     *   Web-based interface for manual PDF invoice uploads.
     *   Mechanism to receive invoices via a dedicated email address.
 *   **Data Extraction (OCR + LLM):**
     *   Integration with **AWS Textract** for OCR.
-    *   Integration with **AWS Bedrock (Anthropic Claude recommended)** for key field extraction: Vendor Name, Invoice Date, Due Date, Invoice Amount, PO Number.
+    *   Integration with LLM (**AWS Bedrock/Claude** or **OpenAI API**) for key field extraction: Vendor Name, Invoice Date, Due Date, Invoice Amount, PO Number.
 *   **Basic Validation:**
     *   Duplicate invoice detection.
     *   PO matching (Includes MVP implementation of a simple mechanism for PO data upload/management).
@@ -41,29 +41,71 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 3. Technology Stack
 
 *   **Frontend:** Next.js (React-based).
-*   **Backend:** Python (Django/Flask recommended) / Node.js.
-*   **Database:** PostgreSQL (potentially using AWS RDS).
+*   **Backend:** Python with Django (preferred for its robust ORM, admin interface, and security features).
+*   **Database:** PostgreSQL on AWS RDS.
 *   **AI / OCR:**
     *   **Primary:** Amazon Web Services (AWS)
         *   OCR: **AWS Textract**
-        *   LLM: **AWS Bedrock (Anthropic Claude recommended)**
-    *   *Alternatives:* Direct OpenAI API integration (callable from AWS), Google Cloud/Gemini.
-*   **Deployment:** Docker, AWS EC2 / Lambda / ECS / EKS / App Runner (based on final architecture).
-*   **Storage:** AWS S3.
+        *   LLM: **AWS Bedrock with Claude** (primary) or **OpenAI API** (alternative)
+    *   *Note:* Both LLM options will be evaluated during development to determine the best fit for accuracy and cost.
+*   **Deployment:** 
+    *   **Primary:** AWS App Runner (for simplified deployment and scaling)
+    *   *Alternative:* AWS ECS with Fargate (if more control is needed)
+*   **Processing:** AWS SQS + AWS Lambda for asynchronous task processing (OCR and LLM operations).
+*   **Storage:** AWS S3 for secure document storage.
 
 ## 4. High-Level Architecture
 
-*   **Frontend:** SPA built with Next.js communicating via APIs.
-*   **Backend:** RESTful API on AWS.
-*   **Processing:** Asynchronous task queue (e.g., AWS SQS + AWS Lambda, or Celery with Redis on EC2/ECS) for OCR and LLM processing to ensure scalability.
-*   **Storage:** Secure AWS S3 for invoice documents.
-*   *Design Consideration:* Modular design to facilitate future agent additions (e.g., exception handling) and integrations (HR, fundraising).
+*   **Frontend Layer:**
+    *   Next.js SPA communicating with backend via RESTful APIs.
+    *   Responsive design optimized for desktop and tablet use.
+    *   Client-side state management with React Context or Redux.
+    *   Secure authentication flow with JWT tokens.
+
+*   **Backend Layer:**
+    *   Django REST Framework API on AWS App Runner.
+    *   Role-based access control (Admin, Uploader, Approver).
+    *   API endpoints for invoice management, user management, and system configuration.
+    *   Integration with external services (OCR, LLM, accounting systems).
+
+*   **Processing Layer:**
+    *   Asynchronous task queue using AWS SQS.
+    *   AWS Lambda functions triggered by SQS messages for:
+        *   OCR processing with AWS Textract.
+        *   LLM processing with AWS Bedrock/Claude or OpenAI API.
+        *   Email parsing and attachment extraction.
+    *   Error handling and retry mechanisms.
+
+*   **Data Layer:**
+    *   PostgreSQL database on AWS RDS with the following core tables:
+        *   Users (authentication, roles, preferences)
+        *   Organizations (client information)
+        *   Invoices (extracted data, status, metadata)
+        *   PurchaseOrders (for matching)
+        *   ApprovalWorkflows (configurations)
+        *   ApprovalActions (audit trail)
+        *   SystemLogs (error tracking, performance metrics)
+    *   AWS S3 buckets for:
+        *   Original invoice documents
+        *   Processed data exports
+        *   System backups
+
+*   **Integration Layer:**
+    *   API clients for accounting systems (initially QuickBooks or Sage Intacct).
+    *   Email service integration for invoice intake.
+    *   Export functionality for CSV and accounting system formats.
+
+*   **Design Considerations:**
+    *   Modular architecture to facilitate future agent additions (e.g., exception handling).
+    *   Scalable design to accommodate growth beyond MVP volume.
+    *   Security-first approach with encryption at rest and in transit.
+    *   Comprehensive logging for troubleshooting and audit purposes.
 
 ## 5. Development Timeline (3 Months)
 
 *   **Month 1: Foundation & Core Extraction**
-    *   Finalize Backend framework choice.
-    *   AWS infrastructure setup (Compute, RDS/Postgres, S3, Bedrock/Textract, SQS).
+    *   Finalize Backend framework choice (Django).
+    *   AWS infrastructure setup (App Runner, RDS/PostgreSQL, S3, Bedrock/Textract, SQS, Lambda).
     *   CI/CD pipeline basics.
     *   **Database schema design & initial implementation:** 
         *   Identify core entities (Users, Organizations, Invoices, POs, Approval Status, Audit Logs).
@@ -103,4 +145,5 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 *   Availability of clear API documentation and test environments for target accounting systems.
 *   The implemented simple PO data management mechanism meets MVP needs.
 *   Approval logic requirements are relatively simple for the MVP.
-*   Basic error flagging is sufficient for initial MVP operational needs. 
+*   Basic error flagging is sufficient for initial MVP operational needs.
+*   AWS Bedrock/Claude and OpenAI API both provide sufficient accuracy for invoice data extraction. 
