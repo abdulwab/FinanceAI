@@ -67,7 +67,7 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   CI/CD pipeline basics.
     *   Database schema & User authentication.
     *   Basic UI shell (Next.js) & PDF upload component.
-    *   Integrate AWS Textract (OCR) & AWS Bedrock/Claude (LLM) for initial data extraction.
+    *   Integrate AWS Textract (OCR) & LLM (AWS Bedrock/Claude or OpenAI API) for initial data extraction.
     *   Basic dashboard UI setup.
 *   **Month 2: Workflow & Validation**
     *   Refine data extraction accuracy.
@@ -78,7 +78,7 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   Focus on UI polish and usability testing.
 *   **Month 3: Integration, Export & Polish**
     *   Implement robust CSV export.
-    *   Develop API integration POC/implementation for **one** target accounting system.
+    *   Develop API integration POC/implementation for **one** target accounting system (e.g., QuickBooks or Sage Intacct).
     *   Intensive end-to-end testing & bug fixing.
     *   Security review and hardening.
     *   Final UI/UX refinements based on feedback.
