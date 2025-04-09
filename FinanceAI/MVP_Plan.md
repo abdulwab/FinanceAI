@@ -41,7 +41,7 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 3. Technology Stack
 
 *   **Frontend:** Next.js (React-based).
-*   **Backend:** Python with Django (preferred for its robust ORM, admin interface, and security features).
+*   **Backend:** Python with FastAPI (preferred for its high performance, automatic API documentation, and modern async support).
 *   **Database:** PostgreSQL on AWS RDS.
 *   **AI / OCR:**
     *   **Primary:** Amazon Web Services (AWS)
@@ -63,10 +63,11 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
     *   Secure authentication flow with JWT tokens.
 
 *   **Backend Layer:**
-    *   Django REST Framework API on AWS App Runner.
-    *   Role-based access control (Admin, Uploader, Approver).
+    *   FastAPI application on AWS App Runner with automatic OpenAPI documentation.
+    *   Role-based access control (Admin, Uploader, Approver) using FastAPI dependencies.
     *   API endpoints for invoice management, user management, and system configuration.
     *   Integration with external services (OCR, LLM, accounting systems).
+    *   SQLAlchemy ORM for database interactions.
 
 *   **Processing Layer:**
     *   Asynchronous task queue using AWS SQS.
@@ -104,14 +105,14 @@ This plan outlines the development of the Minimum Viable Product (MVP) for Finan
 ## 5. Development Timeline (3 Months)
 
 *   **Month 1: Foundation & Core Extraction**
-    *   Finalize Backend framework choice (Django).
+    *   Finalize Backend framework choice (FastAPI).
     *   AWS infrastructure setup (App Runner, RDS/PostgreSQL, S3, Bedrock/Textract, SQS, Lambda).
     *   CI/CD pipeline basics.
     *   **Database schema design & initial implementation:** 
         *   Identify core entities (Users, Organizations, Invoices, POs, Approval Status, Audit Logs).
         *   Define relationships and initial field requirements for MVP features.
-        *   Implement foundational tables in PostgreSQL (AWS RDS).
-    *   User authentication setup.
+        *   Implement foundational tables in PostgreSQL (AWS RDS) with SQLAlchemy models.
+    *   User authentication setup with FastAPI security utilities.
     *   Basic UI shell (Next.js) & PDF upload component.
     *   Integrate AWS Textract (OCR) & LLM (AWS Bedrock/Claude or OpenAI API) for initial data extraction.
     *   Basic dashboard UI setup.
